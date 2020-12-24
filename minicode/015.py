@@ -5,6 +5,12 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 
+# 这里是全局变量
+# 感染率分别为无法感染，低风险，中风险，高风险
+InfectiousRate = [0, 0.1, 0.2, 0.3]
+# 经过多少时间转换状态，指E->I->R环节，S->E需要感染这个行为触发
+DurationThreshold = [0, 7, 3]
+
 # 戴口罩：正方形
 # 不戴口罩：圆形
 # 传染病四个阶段：Suspective -> Exposed -> Infective -> Recovered
@@ -15,21 +21,31 @@ from matplotlib.animation import FuncAnimation
 # 基本参数1：是否注意社交距离
 # E代表潜伏期病人
 # 基本参数1：潜伏期长度
-# 基本参数2：潜伏期传播能力
+# 基本参数2：潜伏期是否具备传播能力
 # I代表出现症状的病人
 # 基本参数1：传播范围
 # R代表被政府发现已经隔离的人
 # 基本参数1：多少天隔离，检测能力
 # 进阶参数1：对密切接触者的排查能力
 
+# Person的基本参数
+# state：0->1->2->3 状态：S->E->I->R
+# pos: (x,y) 显示坐标，主要用于可视化
+# roughPos: (i,j) 逻辑坐标，用于逻辑判断
+# delta: (v_x, v_y) 相当于离散化的速度
+# momentum: 惯性常量
+# duration: 记录每个阶段的经过时间，用于状态变更
+# masked: 是否佩戴口罩
+
 
 class Person:
     infectiousRate = 0.1
     boundary = np.array([-1, 1])
 
-    def __init__(self, pos, state=0):
-        self.pos = pos
+    def __init__(self, masked, state=0):
+        self.pos = np.random.uniform(low=-1, size=2)
         self.delta = np.zeros(2)
+        self.masked = masked
         self.state = state
         self.step = 0.02
         self.momentum = 0.95
@@ -65,23 +81,33 @@ class Person:
 class Crowd:
     outOfBound = 100
     remove = outOfBound * np.ones(2)
+    axis = [-1, 1, -1, 1]
     colors = ["b", "g", "r", "c", "m", "y", "k", "w"]
+    shapes = ["o", "s"]
 
-    def __init__(self, axis, num, variety):
+    def __init__(self, masked, unmasked, variety=8):
+        # 新建图层
         self.fig, self.ax = plt.subplots()
-        self.ax = plt.axis(axis)
+        self.ax = plt.axis(self.axis)
+        # 基本参数
         self.variety = variety
-        self.num = num
-        self.pos = [self.outOfBound * np.ones((2, num)) for _ in range(self.variety)]
-        self.people = [
-            Person(np.random.uniform(low=-1, size=2)) for _ in range(self.num)
+        self.num = masked + unmasked
+        self.masked = masked
+        self.unmasked = unmasked
+        # 实际坐标*图案总数，outofbound代表不画
+        self.pos = [
+            self.outOfBound * np.ones((2, self.num)) for _ in range(self.variety)
         ]
-        self.people[0].getVirus()
-        self.patients = 1
+        # 以给定人群比例构建对象
+        self.people = [Person(i < self.masked) for i in range(self.num)]
+        # 构建variety个图层，以不同图案与颜色区分
         self.plots = [
-            plt.plot(self.pos[i][0], self.pos[i][1], self.colors[i] + "o")[0]
+            plt.plot(
+                self.pos[i][0], self.pos[i][1], self.colors[i % 4] + self.shapes[i % 2]
+            )[0]
             for i in range(self.variety)
         ]
+        # 动画展示
         self.ani = FuncAnimation(self.fig, self.animate, interval=50)
 
     def covid(self):
