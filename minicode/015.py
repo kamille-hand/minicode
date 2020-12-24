@@ -5,7 +5,24 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 
-# 每个人状态：健康--0，感染--1
+# 戴口罩：正方形
+# 不戴口罩：圆形
+# 传染病四个阶段：Suspective -> Exposed -> Infective -> Recovered
+# 对于covid19而言，可以假设所有人都是易感者。
+# covid19全局参数
+# 基本参数1：低/中/高风险传播率
+# S代表易感者
+# 基本参数1：是否注意社交距离
+# E代表潜伏期病人
+# 基本参数1：潜伏期长度
+# 基本参数2：潜伏期传播能力
+# I代表出现症状的病人
+# 基本参数1：传播范围
+# R代表被政府发现已经隔离的人
+# 基本参数1：多少天隔离，检测能力
+# 进阶参数1：对密切接触者的排查能力
+
+
 class Person:
     infectiousRate = 0.1
     boundary = np.array([-1, 1])
