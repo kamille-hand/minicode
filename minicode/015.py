@@ -133,21 +133,72 @@ class Crowd:
                             self.people[j].getVirus()
 
     def covidone(self):
-        resone = []
-        for i in self.pos_grid[x][y]:
-            resone.append(i)
-        if(y+1 < self.grid_num):
-            for i in self.pos_grid[x][y+1]:
-                resone.append(i)
-        if(x+1 < self.grid_num):
-            for i in self.pos_grid[x+1][y]:
-                resone.append(i)
-        if(x > 0):
-            for i in self.pos_grid[x-1][y]:
-                resone.append(i)
-        if(y > 0):
-            for i in self.pos_grid[x][y-1]:
-                resone.append(i)
+        for k in range(self.num):
+            if self.people[k].state == 2:
+                x, y =self.people[k].
+                resone = [] 
+                for i in self.pos_grid[x][y]:
+                    resone.append(i)
+                if(y+1 < self.grid_num):
+                    for i in self.pos_grid[x][y+1]:
+                        resone.append(i)
+                if(x+1 < self.grid_num):
+                    for i in self.pos_grid[x+1][y]:
+                        resone.append(i)
+                if(x > 0):
+                    for i in self.pos_grid[x-1][y]:
+                        resone.append(i)
+                if(y > 0):
+                    for i in self.pos_grid[x][y-1]:
+                        resone.append(i)
+                for num in resone:
+                    self.people[num].getVirus()
+
+    def covidtwo(self):
+        for k in range(self.num):
+            if self.people[k].state == 2:
+                x, y =self.people[k].
+                resone = [[],[],[]]
+                for i in self.pos_grid[x][y]:
+                    resone[0].append(i)
+                if(y+1 < self.grid_num):
+                    for i in self.pos_grid[x][y+1]:
+                        resone[1].append(i)
+                if(x+1 < self.grid_num):
+                    for i in self.pos_grid[x+1][y]:
+                        resone[1].append(i)
+                if(x > 0):
+                    for i in self.pos_grid[x-1][y]:
+                        resone[1].append(i)
+                if(y > 0):
+                    for i in self.pos_grid[x][y-1]:
+                        resone[1].append(i)
+                if(y+1 < self.grid_num and x+1 < self.grid_num):
+                        for i in self.pos_grid[x+1][y+1]:
+                        resone[2].append(i)
+                if(y+1 < self.grid_num and x > 0):
+                        for i in self.pos_grid[x-1][y+1]:
+                        resone[2].append(i)
+                if(y > 0 and x > 0):
+                        for i in self.pos_grid[x-1][y-1]:
+                        resone[2].append(i)      
+                if(y > 0 and x+1 < self.grid_num):
+                        for i in self.pos_grid[x+1][y-1]:
+                        resone[2].append(i)                          
+                if(y+2 < self.grid_num):
+                    for i in self.pos_grid[x][y+2]:
+                        resone[2].append(i)
+                if(x+2 < self.grid_num):
+                    for i in self.pos_grid[x+2][y]:
+                        resone[2].append(i)
+                if(x > 1):
+                    for i in self.pos_grid[x-2][y]:
+                        resone[2].append(i)
+                if(y > 1):
+                    for i in self.pos_grid[x][y-2]:
+                        resone[2].append(i)                        
+                for num in resone[0]:
+                    self.people[num].getVirus()
 
 
     def update(self):
