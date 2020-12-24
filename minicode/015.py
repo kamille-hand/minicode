@@ -80,6 +80,9 @@ class Person:
 
 class Crowd:
     outOfBound = 100
+    
+    grid_num = 100
+    
     remove = outOfBound * np.ones(2)
     axis = [-1, 1, -1, 1]
     colors = ["b", "g", "r", "c", "m", "y", "k", "w"]
@@ -94,6 +97,12 @@ class Crowd:
         self.num = masked + unmasked
         self.masked = masked
         self.unmasked = unmasked
+
+        self.pos_grid = [[] for i in range(self.grid_num)]
+        for i in range(self.grid_num):
+            for j in range(self.grid_num):
+                self.pos_grid[i].append(set())
+
         # 实际坐标*图案总数，outofbound代表不画
         self.pos = [
             self.outOfBound * np.ones((2, self.num)) for _ in range(self.variety)
@@ -122,6 +131,24 @@ class Crowd:
                         if random.uniform(0, 1) < self.people[j].infectiousRate:
                             self.people[i].getVirus()
                             self.people[j].getVirus()
+
+    def covidone(self):
+        resone = []
+        for i in self.pos_grid[x][y]:
+            resone.append(i)
+        if(y+1 < self.grid_num):
+            for i in self.pos_grid[x][y+1]:
+                resone.append(i)
+        if(x+1 < self.grid_num):
+            for i in self.pos_grid[x+1][y]:
+                resone.append(i)
+        if(x > 0):
+            for i in self.pos_grid[x-1][y]:
+                resone.append(i)
+        if(y > 0):
+            for i in self.pos_grid[x][y-1]:
+                resone.append(i)
+
 
     def update(self):
         for i in range(self.num):
@@ -154,6 +181,3 @@ class Crowd:
 if __name__ == "__main__":
     C = Crowd([-1, 1, -1, 1], 100, 2)
     C.show()
-    print("sb")
-    print("sb")
-    print("sb")
