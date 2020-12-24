@@ -22,7 +22,7 @@ class Person:
     def getVirus(self):
         if self.state == 0 and self.immune == False:
             self.state = 1
-            self.duration = 20
+            self.duration = 100
             self.immune = True
 
     def recover(self):
@@ -95,7 +95,10 @@ class Crowd:
     def animate(self, _):
         self.update()
         if self.patients == 0:
-            print(_)
+            print("happy ending!")
+            plt.close()
+        elif self.patients == self.num:
+            print("bad ending~")
             plt.close()
         for i in range(self.variety):
             self.plots[i].set_data(self.pos[i])
